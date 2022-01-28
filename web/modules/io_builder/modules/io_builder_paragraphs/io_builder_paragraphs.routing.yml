@@ -1,0 +1,20 @@
+io_builder_paragraphs.add:
+  path: '/io-builder/paragraphs/add'
+  defaults:
+    _controller: '\Drupal\io_builder_paragraphs\Controller\IoBuilderParagraphsController::add'
+    _title: 'IO Builder'
+  methods: [ GET, POST ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'
+
+io_builder_paragraphs.delete:
+  path: '/io-builder/paragraphs/delete'
+  defaults:
+    _controller: '\Drupal\io_builder_paragraphs\Controller\IoBuilderParagraphsController::delete'
+    _title: 'IO Builder'
+  methods: [ GET, POST ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'
+

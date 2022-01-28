@@ -1,0 +1,43 @@
+io_builder.entity.form:
+  path: 'io-builder/entity/form'
+  defaults:
+    _controller: '\Drupal\io_builder\Controller\IoBuilderEntityController::form'
+    _title: 'Io Builder Entity Form'
+  methods: [ POST ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'
+
+io_builder.field_widget:
+  path: '/io-builder/field-widget/{entity_type}/{bundle}/{field}/{view_mode}/{entity}'
+  defaults:
+    _controller: '\Drupal\io_builder\Controller\IoBuilderController::fieldWidget'
+    _title: 'IO Builder'
+  methods: [ GET, POST ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'
+  options:
+    parameters:
+      entity:
+        type: io_builder
+
+io_builder.drag_drop:
+  path: '/io-builder/drag-drop'
+  defaults:
+    _controller: '\Drupal\io_builder\Controller\DragAndDropController::dragAndDrop'
+    _title: 'IO Builder - Drag & Drop'
+  methods: [ POST ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'
+
+io_builder.toggle:
+  path: '/io-builder/toggle'
+  defaults:
+    _controller: '\Drupal\io_builder\Controller\IoBuilderToggleController::toggle'
+    _title: 'IO Builder - Toggle'
+  methods: [ GET ]
+  requirements:
+    _permission: 'access io builder'
+    _format: 'html'

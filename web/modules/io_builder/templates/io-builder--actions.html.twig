@@ -1,0 +1,11 @@
+{% set module_path = _self|split('/templates') %}
+
+{% if actions is not empty %}
+  <div class="io-builder--actions">
+    {% for action in actions %}
+      {{ action }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+

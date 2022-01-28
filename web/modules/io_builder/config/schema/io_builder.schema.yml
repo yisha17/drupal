@@ -1,0 +1,50 @@
+# Overview configuration information for form mode displays.
+io_builder_display.*.*.*:
+  type: config_entity
+  label: 'IO Builder display'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    mode:
+      type: string
+      label: 'View or form mode machine name'
+    status:
+      type: boolean
+      label: 'Enabled'
+    content:
+      type: sequence
+      label: 'Field widgets'
+      sequence:
+        type: mapping
+        label: 'Field widget'
+        mapping:
+          type:
+            type: string
+            label: 'Widget type machine name'
+          weight:
+            type: integer
+            label: 'Weight'
+          region:
+            type: string
+            label: 'Region'
+          settings:
+            type: field.widget.settings.[%parent.type]
+            label: 'Settings'
+          third_party_settings:
+            type: sequence
+            label: 'Third party settings'
+            sequence:
+              type: field.widget.third_party.[%key]
+    hidden:
+      type: sequence
+      label: 'Hidden'
+      sequence:
+        type: boolean
+        label: 'Component'

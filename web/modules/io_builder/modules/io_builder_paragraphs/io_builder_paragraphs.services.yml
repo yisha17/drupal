@@ -1,0 +1,19 @@
+services:
+
+  #############################################
+  # UTILITY SERVICES
+  #############################################
+  io_builder_paragraphs.utility.paragraphs:
+    class: Drupal\io_builder_paragraphs\Utility\IoBuilderParagraphsUtility
+    arguments:
+      - '@plugin.manager.entity_reference_selection'
+
+  io_builder_paragraphs.twig_extension:
+    class: Drupal\io_builder_paragraphs\TwigExtension\IoBuilderParagraphsField
+    autowire: true
+    arguments:
+      - '@plugin.manager.io_builder_context'
+      - '@io_builder.access_handler.entity'
+      - '@io_builder_paragraphs.utility.paragraphs'
+    tags:
+      - { name: twig.extension }

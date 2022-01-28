@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * The main module file for the IO Builder paragraphs
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function io_builder_paragraphs_theme($existing, $type, $theme, $path) {
+  return [
+    'io_builder_paragraphs__paragraphs_selector' => [
+      'variables' => [
+        'options' => [],
+      ],
+    ],
+  ];
+}

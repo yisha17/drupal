@@ -1,0 +1,119 @@
+services:
+
+  ####################################
+  # UTILITY SERVICES
+  ####################################
+
+  io_builder.utility.form.entity_type_form:
+    class: Drupal\io_builder\Utility\FormUtility\EntityTypeFormUtility
+
+  io_builder.utility.form.entity_form_builder:
+    class: Drupal\io_builder\Utility\FormUtility\IoBuilderEntityFormBuilderUtility
+    arguments:
+      - '@entity_type.manager'
+      - '@form_builder'
+      - '@plugin.manager.io_builder_context'
+
+  io_builder.utility.entity.entity:
+    class: Drupal\io_builder\Utility\EntityUtility\EntityUtility
+    arguments:
+      - '@plugin.manager.io_builder_entity_actions'
+      - '@plugin.manager.io_builder_field'
+      - '@plugin.manager.io_builder_context'
+      - '@entity_type.manager'
+
+  io_builder.utility.field.entity_field_widget:
+    class: Drupal\io_builder\Utility\FieldUtility\EntityFieldWidgetUtility
+    arguments:
+      - '@form_builder'
+
+  io_builder.utility.field.entity_field:
+    class: Drupal\io_builder\Utility\FieldUtility\EntityFieldUtility
+    arguments:
+      - '@renderer'
+
+  ####################################
+  # PARAMCONVERTER
+  ####################################
+  io_builder.paramconverter:
+    class: Drupal\io_builder\ParamConverter\IoBuilderParamConverter
+    arguments:
+      - '@entity_type.manager'
+    tags:
+      - { name: paramconverter }
+
+  ####################################
+  # PLUGIN MANAGERS
+  ####################################
+  plugin.manager.io_builder_entity_actions:
+    class: Drupal\io_builder\Plugin\IoBuilderEntityActionsPluginManager
+    parent: default_plugin_manager
+
+  plugin.manager.io_builder_field:
+    class: Drupal\io_builder\Plugin\IoBuilderFieldPluginManager
+    parent: default_plugin_manager
+    arguments: ['@plugin.manager.field.field_type']
+
+  plugin.manager.io_builder_context:
+    class: Drupal\io_builder\Plugin\IoBuilderContextPluginManager
+    parent: default_plugin_manager
+
+  ####################################
+  # ROUTE SUBSCRIBER
+  ####################################
+  io_builder.subscriber.routing:
+    class: Drupal\io_builder\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+
+  ####################################
+  # TEMP STORE SERVICES
+  ####################################
+  io_builder.temp_store:
+    abstract: true
+    arguments:
+      - '@tempstore.private'
+
+  io_builder.temp_store.settings:
+    class: Drupal\io_builder\PrivateTempStore\IoBuilderSettingsStorage
+    parent: io_builder.temp_store
+
+  ####################################
+  # ACCESS SERVICES
+  ####################################
+  io_builder.access_handler.entity:
+    class: Drupal\io_builder\AccessHandler\EntityAccessHandler
+    arguments:
+      - '@io_builder.temp_store.settings'
+      - '@current_user'
+      - '@router.admin_context'
+
+  ########################
+  #  CACHE CONTEXT
+  ########################
+  cache_context.io_builder_enabled:
+    class: Drupal\io_builder\CacheContext\IoBuilderEnabledCacheContext
+    arguments:
+      - '@io_builder.temp_store.settings'
+    tags:
+      - { name: cache.context}
+
+  ####################################
+  # ALIASES
+  ####################################
+
+  Drupal\io_builder\Utility\FieldUtility\EntityFieldUtility:
+    alias: io_builder.utility.field.entity_field
+
+  Drupal\io_builder\Utility\EntityUtiltiy\EntityUtility:
+    alias: io_builder.utility.entity.entity
+
+  Drupal\io_builder\Utility\FormUtility\EntityTypeFormUtility:
+    alias: io_builder.utility.form.entity_type_form
+
+  Drupal\io_builder\Plugin\IoBuilderEntityActionsPluginManager:
+    alias: plugin.manager.io_builder_entity_actions
+
+  Drupal\io_builder\Plugin\IoBuilderFieldPluginManager:
+    alias: plugin.manager.io_builder_field

@@ -1,0 +1,7 @@
+access io builder:
+  title: 'Use the IO Builder'
+  restrict access: true
+
+administer io builder display:
+  title: 'Administer the IO Builder Form Display'
+  restrict access: true

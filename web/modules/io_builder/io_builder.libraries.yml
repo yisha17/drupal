@@ -1,0 +1,17 @@
+io_builder:
+  css:
+    theme:
+      assets/css/io-builder.css: { }
+  js:
+    assets/js/vendor/popper.min.js: { }
+    assets/js/vendor/tippy-bundle.iife.min.js: { }
+    assets/js/vendor/sortable.min.js: { }
+    assets/js/io-builder.js: { }
+    assets/js/io-tooltips.js: { }
+    assets/js/io-dragdrop.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/popperjs

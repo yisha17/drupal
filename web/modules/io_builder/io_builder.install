@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function io_builder_install() {
+  module_set_weight('io_builder', 11);
+}

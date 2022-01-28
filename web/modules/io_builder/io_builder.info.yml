@@ -1,0 +1,10 @@
+name: 'IO Builder'
+type: module
+description: 'Allows content administrators to build pages using a frontend builder'
+core: 8.x
+core_version_requirement: ^8 || ^9
+
+# Information added by Drupal.org packaging script on 2021-03-16
+version: '1.0.0-alpha3'
+project: 'io_builder'
+datestamp: 1615903008

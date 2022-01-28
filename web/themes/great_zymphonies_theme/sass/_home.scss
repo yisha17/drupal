@@ -1,0 +1,184 @@
+
+.path-frontpage .main-content,
+.services,
+.products,
+.features,
+.copyright,
+.clients,
+.top-message,
+.topwidget,
+.midwidget,
+.btmwidget,
+.updates,
+.footer,
+.faq{
+	padding: 40px 0;
+}
+
+.main-content{
+	padding: 0 0 50px 0;
+}
+
+.footer,
+.features,
+.midwidget{
+    background: #f1f1f1;
+}
+
+/*FAQ*/
+
+.faq{
+	.region-faq{
+		max-width: 600px;
+		margin: 0 auto;
+	}
+}
+
+.accordion{
+	.panel-title{
+		a{
+		    padding: 20px;
+		    display: block;
+		    background: #eee;
+		    color: #000;
+
+		    i{
+		    	float: right;
+		    }
+
+		    &.collapsed i:before{
+		    	content: "\f067";
+		    }
+		}
+	}
+	.panel-collapse{
+		padding: 20px;
+		background: #f7f7f7;
+	}
+}
+
+.skills{
+	.skill{
+		margin-bottom: 20px;
+	}
+	.line{
+		background: #ddd;
+	}
+	.skill-label{
+		float: left;
+	}
+}
+
+
+.footer{
+
+	tbody tr:hover, tbody tr:focus {
+	    background: none;
+	}
+}
+
+.clients{
+	.region{
+		ul {
+			li{
+				display: inline-block;
+				width: 100%;
+				text-align: center;
+
+				img{
+					max-width: 200px;
+				}
+			}
+		}
+	}
+}
+
+.services{
+	text-align: center;
+}
+
+/* Testimonials */
+
+.testimonials-wrap{
+	background: #fafafa;
+	border-top: solid 1px #e3e3e3;
+	border-bottom: solid 1px #e3e3e3;
+	padding: 20px 0;
+	text-align: center;
+	font-size: 1em;
+	line-height: 160%;
+}
+
+.region-testimonials{
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.testimonials-pic{
+	width: 40px;
+	height: 40px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-right: 10px;
+}
+
+.testimonials-pic img{
+	@include border-radius(50%);
+}
+
+.testimonials-author{
+	padding: 0 5px;
+	font-size: .75em;
+	color: #555;
+}
+
+/*Price table*/
+
+.price-table{
+	.card-header{
+		border: 0;
+    	padding: 20px 0;
+	}
+
+	ul li {
+	    list-style: none;
+	    border-bottom: 1px solid #eee;
+	    padding-bottom: 10px;
+	    margin-bottom: 10px;
+	}
+}
+
+
+/*Front Page*/
+
+.path-frontpage .feed-icon{
+ 	display: none;
+}
+
+
+/*Team*/
+
+.team{
+	.team-list{
+		.region{
+			background: #efefef;
+			overflow: hidden;
+			padding: 10px;
+			border: 1px solid #eaeaea;
+		}
+	}
+}
+
+
+/*Bottom Widgets*/
+
+.btmwidget{
+    background: #222;
+    text-align: center;
+    color: #999;
+	
+	h2{
+		font-size: 2em;
+	}
+}
+

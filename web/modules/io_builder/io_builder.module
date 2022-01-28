@@ -1,0 +1,277 @@
+<?php
+
+/**
+ * @file
+ * The main module file for the IO Builder functionality.
+ */
+
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\io_builder\Form\IoBuilderEntityForm;
+use Drupal\io_builder\FormDisplay\IoBuilderDisplayForm;
+use Drupal\io_builder\Plugin\Derivative\IoBuilderLocalTask;
+use Drupal\io_builder\Plugin\IoBuilder\Context\IoBuilderEntityContextInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+
+/**
+ * Implements hook_help().
+ */
+function io_builder_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.io_builder':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module provides a way to visually build entities in the frontend.') . '</p>';
+      $output .= '<p><a href="https://www.drupal.org/project/io_builder" target="_blank">' . t('See the project page for more information.') . '</a></p>';
+      return $output;
+  }
+}
+/**
+ * Implements hook_theme().
+ */
+function io_builder_theme($existing, $type, $theme, $path) {
+  return [
+    'io_builder__field_placeholder' => [
+      'variables' => [
+        'text' => NULL,
+      ],
+    ],
+    'io_builder__actions' => [
+      'variables' => [
+        'actions' => [],
+        'context' => NULL,
+      ],
+    ],
+    'io_builder__action' => [
+      'variables' => [
+        'title' => NULL,
+        'url' => NULL,
+        'attributes' => NULL,
+        'key' => NULL,
+      ],
+    ],
+    'io_builder__placeholder' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+    'io_builder__confirmation' => [
+      'variables' => [
+        'action' => NULL,
+        'title' => NULL,
+      ],
+    ],
+    'io_builder__panel' => [
+      'variables' => [
+        'content' => NULL,
+      ],
+    ],
+    'io_builder__add_section' => [
+      'variables' => [
+        'link' => NULL,
+        'position' => NULL,
+      ],
+    ],
+    'io_builder__field_wrapper' => [
+      'file' => 'templates/theme.inc',
+      'variables' => [
+        'actions' => [],
+        'entity' => NULL,
+        'view_mode' => NULL,
+        'field' => NULL,
+        'placeholder' => NULL,
+        'render' => NULL,
+      ],
+    ],
+    'io_builder__toggle_link' => [
+      'variables' => [
+        'url' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function io_builder_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_state->get('io_builder')) {
+    io_builder_form_attach_key($form);
+  }
+
+  $formObject = $form_state->getFormObject();
+
+  if (!$formObject instanceof EntityFormInterface) {
+    return;
+  }
+
+  $entity = $formObject->getEntity();
+
+  if (!$entity instanceof ConfigEntityBundleBase) {
+    return;
+  }
+
+  /** @var \Drupal\io_builder\Utility\FormUtility\EntityTypeFormUtility $formUtility */
+  $formUtility = \Drupal::service('io_builder.utility.form.entity_type_form');
+  $formUtility->setEntity($entity);
+  $formUtility->alterForm($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function io_builder_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $build['#cache']['contexts'][] = 'io_builder_enabled';
+
+  /** @var \Drupal\io_builder\AccessHandler\EntityAccessHandler $entityAccessHandler */
+  $entityAccessHandler = \Drupal::service('io_builder.access_handler.entity');
+
+  if (!$entityAccessHandler->ioBuilderAccess($entity, $view_mode)) {
+    return;
+  }
+
+  if (!$entity instanceof ContentEntityBase) {
+    return;
+  }
+
+  /** @var \Drupal\io_builder\Plugin\IoBuilderContextPluginManager $contextPluginManager */
+  $contextPluginManager = \Drupal::service('plugin.manager.io_builder_context');
+
+  $ioBuilderContext = $contextPluginManager->createInstance('io_builder_entity_context', [
+    'entity' => $entity,
+    'view_mode' => $view_mode,
+  ]);
+
+  if (!$ioBuilderContext instanceof IoBuilderEntityContextInterface) {
+    return;
+  }
+
+  /** @var Drupal\io_builder\Utility\EntityUtility\EntityUtility $service */
+  $service = \Drupal::service('io_builder.utility.entity.entity');
+  $service->setContext($ioBuilderContext);
+  $service->extendBuild($build);
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function io_builder_preprocess(&$variables, $hook) {
+  if (empty($variables['elements']['#io_builder'])) {
+    return;
+  }
+
+  $variables['content']['io_builder'] = $variables['elements']['#io_builder'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function io_builder_theme_suggestions_io_builder__action_alter(array &$suggestions, array $variables) {
+  $hook = 'io_builder__action';
+
+  if (empty($variables['key'])) {
+    return $suggestions;
+  }
+
+  $suggestions[] = sprintf(
+    '%s__%s', $hook, $variables['key']
+  );
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function io_builder_theme_suggestions_io_builder__actions(array $variables) {
+  $suggestions = [];
+  $context = $variables['context'];
+  $hook = 'io_builder__actions';
+
+  if ($context instanceof IoBuilderEntityContextInterface) {
+    $suggestions[] = sprintf(
+      '%s__%s', $hook, $context->getEntityTypeId()
+    );
+
+    $suggestions[] = sprintf(
+      '%s__%s__%s', $hook, $context->getEntityTypeId(), $context->getViewMode()
+    );
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Attaches form id to all form elements.
+ *
+ * @param array $form
+ *   The form or form element which children should have form id attached.
+ */
+function io_builder_form_attach_key(array &$form) {
+  $ioBuilder = $form['#io_builder_enable'] ?? FALSE;
+
+  if ($ioBuilder) {
+    $form['#attributes']['class'][] = 'io-builder-form';
+  }
+
+  foreach (Element::children($form) as $child) {
+    if ($ioBuilder) {
+      $form[$child]['#io_builder_enable'] = TRUE;
+    }
+
+    io_builder_form_attach_key($form[$child]);
+  }
+}
+
+/**
+ * Add a class on io builder details form element.
+ *
+ * @param array $variables
+ *   The variables array.
+ */
+function io_builder_preprocess_details(array &$variables) {
+  if (!empty($variables['element']['#io_builder_enable'])) {
+    $variables['attributes']['class'][] = 'details--io-builder';
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function io_builder_entity_type_build(array &$entity_types) {
+  foreach ($entity_types as $entity_type) {
+    if (!$entity_type instanceof ContentEntityType) {
+      continue;
+    }
+
+    $entity_type->setFormClass('io_builder', IoBuilderEntityForm::class);
+    $entity_type->setFormClass('io_builder_display', IoBuilderDisplayForm::class);
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function io_builder_local_tasks_alter(&$local_tasks) {
+  $container = \Drupal::getContainer();
+  $localTasks = IoBuilderLocalTask::create($container, 'io_builder');
+  $localTasks->alterLocalTasks($local_tasks);
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function io_builder_page_attachments_alter(array &$attachments) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
+
+  $attachments['#attached']['library'][] = 'io_builder/io_builder';
+}

@@ -1,0 +1,19 @@
+{% set module_path = _self|split('/templates') %}
+
+<div id="io-builder--sidebar-panel" class="panel panel-default io-builder--panel">
+  <div class="io-builder--panel__aside">
+    <div class="io-builder--panel__aside__header">
+      <div class="io-builder--panel__aside__header__title d-flex align-items-center">
+        {%- include module_path[0] ~ "/assets/img/edit.svg" ignore missing only -%}
+        <h3>{{ 'edit'|t }}</h3>
+      </div>
+      <button class="close" aria-label="close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M13.8 12l5.5-5.4c.5-.5.5-1.3 0-1.8s-1.3-.5-1.8 0L12 10.2 6.6 4.8c-.5-.5-1.3-.5-1.8 0s-.5 1.3 0 1.8l5.5 5.4-5.5 5.4c-.5.5-.5 1.3 0 1.8s1.3.5 1.8 0l5.4-5.5 5.4 5.5c.5.5 1.3.5 1.8 0s.5-1.3 0-1.8L13.8 12z"/></svg>
+      </button>
+    </div>
+    <div class="panel-body">
+      {{ content }}
+    </div>
+  </div>
+  <div class="io-builder--panel__overlay"></div>
+</div>

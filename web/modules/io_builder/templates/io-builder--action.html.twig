@@ -1,0 +1,18 @@
+{%
+  set classes = [
+    'has-tooltip',
+    'io-builder-action__' ~ key,
+  ]
+%}
+
+{% if attributes is empty %}
+  {% set attributes = create_attribute([]) %}
+{% endif %}
+
+{% set module_path = _self|split('/templates') %}
+{% set attributes = attributes.addClass(classes) %}
+{% set attributes = attributes.setAttribute('data-tippy-content', title) %}
+
+<a href="{{ url }}" {{ attributes }}>
+  {%- include module_path[0] ~ "/assets/img/" ~ key ~ ".svg" ignore missing only -%}
+</a>

@@ -1,0 +1,12 @@
+name: 'IO Builder - Paragraphs'
+type: module
+description: 'Adds an inline paragraphs widget'
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - io_builder
+
+# Information added by Drupal.org packaging script on 2021-03-16
+version: '1.0.0-alpha3'
+project: 'io_builder'
+datestamp: 1615903008

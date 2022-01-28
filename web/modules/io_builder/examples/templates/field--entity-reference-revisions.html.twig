@@ -1,0 +1,7 @@
+{% set attributes = attributes.addClass('io-builder--sort-wrapper') %}
+
+<div{{ attributes }}>
+  {% for item in items %}
+    {{ item.content }}
+  {% endfor %}
+</div>

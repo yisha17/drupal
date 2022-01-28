@@ -1,0 +1,3 @@
+io_builder.tasks:
+  class: \Drupal\Core\Menu\LocalTaskDefault
+  deriver: \Drupal\io_builder\Plugin\Derivative\IoBuilderLocalTask
